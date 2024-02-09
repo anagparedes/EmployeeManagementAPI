@@ -9,25 +9,6 @@ namespace EmployeeManagementAPI.Services.EmployeeService
 {
     public class EmployeeService : IEmployeeService
     {
-        //private static List<Employee> employeess = new List<Employee>
-        //{
-        //    new Employee
-        //    {
-        //        Id = 1,
-        //        Name = "Ramon",
-        //        Role = "Assistant",
-        //        Company = "CompanyTest",
-        //
-        //    },
-        //     new Employee
-        //     {
-        //        Id = 2,
-        //        Name = "Maria",
-        //        Role = "Assistant",
-        //        Company = "CompanyTest",
-        //
-        //     }
-        //};
         private readonly DataContext _context;
         public EmployeeService(DataContext context) 
         { 

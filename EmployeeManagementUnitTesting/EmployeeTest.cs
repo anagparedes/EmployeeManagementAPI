@@ -37,8 +37,8 @@ namespace EmployeeManagementUnitTesting
             };
             _employeeServiceMock.Setup(service => service.GetAllEmployees()).ReturnsAsync(employees);
 
-            var employeeDtos = employees.Select(e => new Employee { Name = e.Name });
-            _mapperMock.Setup(mapper => mapper.Map<IEnumerable<Employee>>(employees)).Returns(employeeDtos);
+            var employeeDtos = employees.Select(e => new EmployeeDto { Name = e.Name });
+            _mapperMock.Setup(mapper => mapper.Map<IEnumerable<EmployeeDto>>(employees)).Returns(employeeDtos);
 
             // Act
             var result = await _employeeController.GetAllEmployees();
@@ -54,7 +54,7 @@ namespace EmployeeManagementUnitTesting
         public async Task GetEmployeeById_ExistingId_ReturnsOkResultWithEmployeeDto()
         {
             // Arrange
-            var employee = new Employee { Id = 1, Name = "John" };
+            var employee = new Employee { Id = 1, Name = "Laura Castillo" };
             _employeeServiceMock.Setup(service => service.GetEmployeebyId(It.IsAny<int>())).ReturnsAsync(employee);
 
             var employeeDto = new EmployeeDto { Name = employee.Name };
@@ -70,10 +70,24 @@ namespace EmployeeManagementUnitTesting
         }
 
         [Fact]
+        public async Task GetEmployeeById_NonExistingId_ReturnsNotFound()
+        {
+            // Arrange
+            _employeeServiceMock.Setup(service => service.GetEmployeebyId(It.IsAny<int>())).ReturnsAsync((Employee)null);
+
+            // Act
+            var result = await _employeeController.GetEmployeebyId(1);
+
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(result.Result);
+        }
+
+
+        [Fact]
         public async Task AddEmployee_ValidEmployee_ReturnsOkResultWithEmployeeDtos()
         {
             // Arrange
-            var employee = new Employee { Id = 1, Name = "John" };
+            var employee = new Employee { Id = 1, Name = "José Romero" };
             _employeeServiceMock.Setup(service => service.AddEmployee(It.IsAny<Employee>())).ReturnsAsync(new List<Employee> { employee });
 
             var employeeDto = new EmployeeDto { Name = employee.Name };
@@ -87,11 +101,50 @@ namespace EmployeeManagementUnitTesting
             var returnedEmployees = Assert.IsAssignableFrom<IEnumerable<EmployeeDto>>(okResult.Value);
             Assert.Single(returnedEmployees); // Assuming only one employee is returned
         }
+
+        [Fact]
+        public async Task UpdateEmployee_ExistingId_ReturnsOkResultWithEmployeeDtos()
+        {
+            // Arrange
+            var existingEmployee = new Employee { Id = 1, Name = "María Chavez" };
+            _employeeServiceMock.Setup(service => service.UpdateEmployee(It.IsAny<int>(), It.IsAny<Employee>())).ReturnsAsync(new List<Employee> { existingEmployee });
+
+            var updatedEmployee = new Employee { Id = 1, Name = "Updated María", Role = "Cleaner" };
+
+            var employeeDto = new EmployeeDto { Name = updatedEmployee.Name };
+            _mapperMock.Setup(mapper => mapper.Map<EmployeeDto>(existingEmployee)).Returns(employeeDto);
+
+            // Act
+            var result = await _employeeController.UpdateEmployee(1, updatedEmployee);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var returnedEmployees = Assert.IsAssignableFrom<IEnumerable<EmployeeDto>>(okResult.Value);
+
+            Assert.NotNull(employeeDto);
+            Assert.Equal(updatedEmployee.Name, employeeDto.Name);
+
+        }
+
+
+        [Fact]
+        public async Task UpdateEmployee_NonExistingId_ReturnsNotFound()
+        {
+            // Arrange
+            _employeeServiceMock.Setup(service => service.UpdateEmployee(It.IsAny<int>(), It.IsAny<Employee>())).ReturnsAsync((List<Employee>)null);
+
+            // Act
+            var result = await _employeeController.UpdateEmployee(1, new Employee());
+
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(result.Result);
+        }
+
         [Fact]
         public async Task DeleteEmployee_ExistingId_ReturnsOkResultWithEmployeeDtos()
         {
             // Arrange
-            var employee = new Employee { Id = 1, Name = "John" };
+            var employee = new Employee { Id = 1, Name = "Juan Mendoza" };
             _employeeServiceMock.Setup(service => service.DeleteEmployee(It.IsAny<int>())).ReturnsAsync(new List<Employee> { employee });
 
             var employeeDto = new EmployeeDto { Name = employee.Name };
@@ -105,6 +158,20 @@ namespace EmployeeManagementUnitTesting
             var returnedEmployees = Assert.IsAssignableFrom<IEnumerable<EmployeeDto>>(okResult.Value);
             Assert.Single(returnedEmployees);
         }
+
+        [Fact]
+        public async Task DeleteEmployee_NonExistingId_ReturnsNotFound()
+        {
+            // Arrange
+            _employeeServiceMock.Setup(service => service.DeleteEmployee(It.IsAny<int>())).ReturnsAsync((List<Employee>)null);
+
+            // Act
+            var result = await _employeeController.DeleteEmployee(1);
+
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(result.Result);
+        }
+
 
 
     }

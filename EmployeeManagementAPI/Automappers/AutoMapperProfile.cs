@@ -10,8 +10,8 @@ namespace EmployeeManagementAPI.Automappers
         {
             CreateMap<EmployeeDto, Employee>();
             CreateMap<Employee, EmployeeDto>();
-            CreateMap<UserDto, User>();
-            CreateMap<User, UserDto>();
+            CreateMap<UserDto, Employee>();
+            CreateMap<Employee, UserDto>();
         
         }
     }

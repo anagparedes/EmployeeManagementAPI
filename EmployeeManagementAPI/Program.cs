@@ -1,13 +1,13 @@
 global using EmployeeManagementAPI.Models;
-using EmployeeManagementAPI.Automappers;
 using EmployeeManagementAPI.Data;
 using EmployeeManagementAPI.Services;
+using EmployeeManagementAPI.Services.EmployeeService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddKeyedScoped<IEmployeeService, EmployeeService>("employeeService");
+builder.Services.AddScoped<IEmployeeService,EmployeeService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

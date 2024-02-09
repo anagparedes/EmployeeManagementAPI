@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using EmployeeManagementAPI.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,11 +8,11 @@ using System.Text;
 
 namespace EmployeeManagementAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Employee")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User();
+        public static Employee employee = new Employee();
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
@@ -24,35 +23,35 @@ namespace EmployeeManagementAPI.Controllers
 
         }
         [HttpPost("register")]
-        public ActionResult<User> Register(UserDto request)
+        public ActionResult<Employee> Register(UserDto request)
         {
             string passwordHash
                 = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            user.UserName = request.Username;
-            user.PasswordHash = passwordHash;
+            employee.UserName = request.Username;
+            employee.PasswordHash = passwordHash;
 
-            return Ok(_mapper.Map<User>(user));
+            return Ok(_mapper.Map<Employee>(employee));
         }
 
         [HttpPost("login")]
-        public ActionResult<User> Login(UserDto request)
+        public ActionResult<Employee> Login(UserDto request)
         {
-            if (user.UserName != request.Username)
+            if (employee.UserName != request.Username)
             {
                 return BadRequest("User not found");
             }
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, employee.PasswordHash))
             {
                 return BadRequest("Wrong Password");
             }
 
-            string token = CreateToken(user);
+            string token = CreateToken(employee);
 
             return Ok(token);
         }
 
-        private string CreateToken(User user)
+        private string CreateToken(Employee user)
         {
             List<Claim> claims = new List<Claim>
             {

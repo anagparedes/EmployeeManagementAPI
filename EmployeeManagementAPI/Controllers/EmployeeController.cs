@@ -3,9 +3,7 @@ using EmployeeManagementAPI.Data;
 using EmployeeManagementAPI.DTOs;
 using EmployeeManagementAPI.Services.EmployeeService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Azure.Core;
-using EmployeeManagementAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmployeeManagementAPI.Controllers
 {
@@ -60,10 +58,10 @@ namespace EmployeeManagementAPI.Controllers
             return Ok(result.Select(employee => _mapper.Map<EmployeeDto>(employee)));
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize]
         public async Task<ActionResult<List<Employee>>> DeleteEmployee(int id)
         {
-            var result = await _employeeService.DeleteEmployee(id);
+            var result = await _employeeService.DeleteEmployeebyId(id);
             if (result is null)
                 return NotFound("Employee not found.");
 

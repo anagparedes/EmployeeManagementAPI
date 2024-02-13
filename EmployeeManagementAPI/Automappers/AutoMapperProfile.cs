@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using EmployeeManagementAPI.DTOs;
-using EmployeeManagementAPI.Models;
 
 namespace EmployeeManagementAPI.Automappers
 {
@@ -10,9 +9,6 @@ namespace EmployeeManagementAPI.Automappers
         {
             CreateMap<EmployeeDto, Employee>();
             CreateMap<Employee, EmployeeDto>();
-            CreateMap<UserDto, Employee>();
-            CreateMap<Employee, UserDto>();
-        
         }
     }
 }

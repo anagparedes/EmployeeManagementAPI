@@ -1,15 +1,9 @@
 using AutoMapper;
 using EmployeeManagementAPI.Controllers;
-using EmployeeManagementAPI.Data;
 using EmployeeManagementAPI.DTOs;
 using EmployeeManagementAPI.Models;
-using EmployeeManagementAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Moq;
-using Xunit;
 using EmployeeManagementAPI.Services.EmployeeService;
 
 namespace EmployeeManagementUnitTesting
@@ -31,9 +25,9 @@ namespace EmployeeManagementUnitTesting
             // Arrange
             var employees = new List<Employee>
             {
-                new Employee { Id = 1, Name = "John Doe", Role = "Business Analyst", Company = "Banco Popular", UserName="jdoe" },
-                new Employee { Id = 2, Name = "Jane Cruz", Role = "Optical Consultant", Company = "Optica Baez", UserName="jcruz" },
-                new Employee { Id = 1, Name = "Ramon Ruiz", Role = "Assistant", Company = "CompanyTest", UserName="rruiz"},
+                new Employee { Id = 1, Name = "John Doe", Role = "Business Analyst", Company = "Banco Popular" },
+                new Employee { Id = 2, Name = "Jane Cruz", Role = "Optical Consultant", Company = "Optica Baez"},
+                new Employee { Id = 1, Name = "Ramon Ruiz", Role = "Assistant", Company = "CompanyTest"},
             };
 
             _employeeServiceMock.Setup(service => service.GetAllEmployees()).ReturnsAsync(employees);
@@ -137,7 +131,7 @@ namespace EmployeeManagementUnitTesting
         {
             // Arrange
             var employee = new Employee { Id = 32, Name = "Juan Mendoza" };
-            _employeeServiceMock.Setup(service => service.DeleteEmployee(It.IsAny<int>())).ReturnsAsync(new List<Employee> { employee });
+            _employeeServiceMock.Setup(service => service.DeleteEmployeebyId(It.IsAny<int>())).ReturnsAsync(new List<Employee> { employee });
 
             // Act
             var result = await _employeeController.DeleteEmployee(32);

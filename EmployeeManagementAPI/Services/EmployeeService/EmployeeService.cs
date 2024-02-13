@@ -1,8 +1,5 @@
 ﻿
-using EmployeeManagementAPI.DTOs;
 using EmployeeManagementAPI.Data;
-using EmployeeManagementAPI.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagementAPI.Services.EmployeeService
@@ -21,7 +18,7 @@ namespace EmployeeManagementAPI.Services.EmployeeService
             return await _context.Employees.ToListAsync();
         }
 
-        public async Task<List<Employee>?> DeleteEmployee(int id)
+        public async Task<List<Employee>?> DeleteEmployeebyId(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
             if (employee == null)
@@ -34,7 +31,7 @@ namespace EmployeeManagementAPI.Services.EmployeeService
             
         }
 
-        public async Task<List<Employee>> GetAllEmployees()
+        public async Task<IEnumerable<Employee>> GetAllEmployees()
         {
             var employees = await _context.Employees.ToListAsync();
             return employees;
@@ -51,18 +48,28 @@ namespace EmployeeManagementAPI.Services.EmployeeService
         public async Task<List<Employee>?> UpdateEmployee(int id, Employee request)
         {
             var employee = await _context.Employees.FindAsync(id);
+            
             if (employee == null)
                 return null;
 
             employee.Name = request.Name;
             employee.Role = request.Role;
             employee.Company = request.Company;
-            employee.UserName = request.UserName;
-            employee.PasswordHash = request.PasswordHash;
+            //employee.UserName = request.UserName;
+            //employee.PasswordHash = request.PasswordHash;
 
             await _context.SaveChangesAsync();
 
             return await _context.Employees.ToListAsync();
         }
+        //public async Task<Company>? GetCompanyById(int id)
+        //{
+        //    var employee = await _context.Employees.FindAsync(id);
+        //    if (employee == null)
+        //        return null;
+        //    if(employee.CompanyId == id)
+        //        Company = await _context.Companys.FindAsync(id);
+        //
+        //}
     }
 }
